@@ -1,0 +1,46 @@
+.upper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  /* text-align: center; */
+}
+
+.slider {
+  display: flex;
+  justify-content: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+.right-arrow,
+.left-arrow {
+  margin: 20px;
+  align-self: center;
+}
+
+.right-arrow {
+  order: 3;
+}
+
+img {
+  height: 200px;
+  width: auto;
+}
+
+.Hero {
+  background-color: aliceblue;
+  width: 100%;
+  height: 100vw;
+  color: black;
+}
+
+.Foto-Hero,
+.ButtonHero {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 0;
+}
