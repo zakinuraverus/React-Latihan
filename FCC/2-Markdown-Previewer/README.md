@@ -1,8 +1,19 @@
-# React + Vite
+# About Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project using [React + Vite](https://vitejs.dev/) - [React-Markdown](https://www.npmjs.com/package/react-markdown) - [Remark-GFM](https://www.npmjs.com/package/remark-gfm/v/1.0.0) as Plugins - [Tailwindcss](https://tailwindcss.com/) as style
 
-Currently, two official plugins are available:
+# How To Install
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Every dependency is in **package.json**. what you need to do is just type your terminal
+
+```
+npm install
+```
+
+## Run
+
+After all dependencies are installed, you can run this project by typing on your terminal
+
+```
+npm run dev
+```
