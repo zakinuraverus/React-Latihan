@@ -1,229 +1,194 @@
-// import Button from "./component/ButtonCalculator";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [display, setDisplay] = useState("0");
-  const [result, setResult] = useState("0");
+  const [timeBreak, setTimeBreak] = useState(5);
+  const [timeSession, setTimeSession] = useState(25);
+  const [timingType, setTimingType] = useState("SESSION");
+  const [leftTime, setLeftTime] = useState(1500);
 
-  const clearData = () => {
-    setDisplay("");
-    setResult("");
+  const [play, setPlay] = useState(false);
+
+  const timeout = setTimeout(() => {
+    if (leftTime && play) {
+      setLeftTime(leftTime - 1);
+    }
+  }, 1000);
+
+  function handleSessionIncrement() {
+    if (timeSession < 60) {
+      setTimeSession(timeSession + 1);
+      setLeftTime(leftTime + 60);
+    }
+  }
+
+  function handleSessionDecrement() {
+    if (timeSession > 1) {
+      setTimeSession(timeSession - 1);
+      setLeftTime(leftTime - 60);
+    }
+  }
+
+  function handleBreakIncrement() {
+    if (timeBreak < 10) {
+      setTimeBreak(timeBreak + 1);
+    }
+  }
+
+  function handleBreakDecrement() {
+    timeBreak == 1 ? setTimeBreak(timeBreak) : setTimeBreak(timeBreak - 1);
+  }
+
+  const handlePlay = () => {
+    clearTimeout(timeout);
+    setPlay(!play);
   };
 
-  const handleNumber = (event) => {
-    const number = event.target.value;
-    display === "0" ? setDisplay(number) : setDisplay(display + number);
-  };
-
-  const handleOperator = (event) => {
-    const operator = event.target.value;
-    setDisplay(display + " " + operator + " ");
-  };
-
-  const handleDelete = () => {
-    setDisplay(display.toString().substring(0, display.length - 1));
-  };
-
-  const handleSum = () => {
-    const result = eval(display);
-    setDisplay(result);
-    setResult(result);
-  };
-
-  const handleDecimal = () => {
-    const arrays = display.split(" ");
-    const lastElement = arrays[arrays.length - 1];
-
-    if (!lastElement.includes(".") && isNaN(parseInt(lastElement)) === false) {
-      setDisplay(display + ".");
+  const resetTimer = () => {
+    const audio = document.getElementById("beep");
+    if (!leftTime && timingType === "SESSION") {
+      setLeftTime(timeBreak * 60);
+      setTimingType("BREAK");
+      audio.play();
+    }
+    if (!leftTime && timingType === "BREAK") {
+      setLeftTime(timeSession * 60);
+      setTimingType("SESSION");
+      audio.pause();
+      audio.currentTime = 0;
     }
   };
 
+  const clock = () => {
+    if (play) {
+      timeout;
+      resetTimer();
+    } else {
+      clearTimeout(timeout);
+    }
+  };
+
+  useEffect(() => {
+    clock();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [play, leftTime, timeout]);
+
+  const timeFormatter = () => {
+    const minutes = Math.floor(leftTime / 60);
+    const seconds = leftTime - minutes * 60;
+    const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
+
+  function handleResetTime() {
+    clearTimeout(timeout);
+    setPlay(false);
+    setLeftTime(1500);
+    setTimeBreak(5);
+    setTimeSession(25);
+    setTimingType("SESSION");
+    const audio = document.getElementById("beep");
+    audio.pause();
+    audio.currentTime = 0;
+  }
+
+  const title = timingType === "SESSION" ? "Session" : "Break";
+
   return (
-    <div
-      className="mx-auto h-screen flex items-center justify-center"
-      id="calculator"
-    >
-      <div className="bg-orange-200 w-80 h-96 px-2 pt-2 border rounded-md border-BlueBG_Drum">
-        <div
-          className="bg-gray-900/25 px-2 border border-white rounded-md text-white"
-          id="display"
-        >
-          <div className="text-right text-sm h-5">{display}</div>
-          <span className="block text-right text-xl h-7">{result}</span>
+    <div className="containter mx-auto h-screen flex items-center justify-center bg-slate-400">
+      <div id="app" className="text-center text-xl xl:text-5xl py-5">
+        <div id="title">25 + 5 Clock</div>
+        <div className="flex justify-between py-5" id="control">
+          <div id="break-label" className="w-auto pr-5">
+            <p>Break Length</p>
+            <div className="flex justify-center">
+              <button
+                id="break-decrement"
+                disabled={play}
+                onClick={handleBreakDecrement}
+              >
+                <img
+                  draggable="false"
+                  src="src/assets/arrow_down.svg"
+                  className="xl:w-10"
+                ></img>
+              </button>
+              <p id="break-length">{timeBreak}</p>
+              <button
+                id="break-increment"
+                disabled={play}
+                onClick={handleBreakIncrement}
+              >
+                <img
+                  draggable="false"
+                  src="src/assets/arrow_up.svg"
+                  className="xl:w-10"
+                ></img>
+              </button>
+            </div>
+          </div>
+          <div id="session-label" className="w-auto pl-5">
+            <p>Session Length</p>
+            <div className="flex justify-center">
+              <button
+                id="session-decrement"
+                disabled={play}
+                onClick={handleSessionDecrement}
+              >
+                <img
+                  draggable="false"
+                  src="src/assets/arrow_down.svg"
+                  className="xl:w-10"
+                ></img>
+              </button>
+
+              <p id="session-length">{timeSession}</p>
+
+              <button
+                id="session-increment"
+                disabled={play}
+                onClick={handleSessionIncrement}
+              >
+                <img
+                  draggable="false"
+                  src="src/assets/arrow_up.svg"
+                  className="xl:w-10"
+                ></img>
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="pt-5 grid grid-cols-4 grid-rows-5 h-4/5">
-          {/* <Button text={"AC"} />
-          <Button text={"DEL"} />
-          <Button text={"0"} classFill={"bg-white"} /> */}
+        <div className="mx-auto my-2 w-60">
+          <div className=" border border-black rounded-md py-4">
+            <p id="timer-label">{title}</p>
+            <p id="time-left">{timeFormatter()}</p>
+          </div>
+          <div className="flex justify-center py-2 gap-2">
+            <button id="start_stop" onClick={handlePlay}>
+              <img
+                draggable="false"
+                src="src/assets/playPause.svg"
+                alt="Play-Pause"
+                className="w-16 xl:w-20"
+              />
+            </button>
 
-          {/* Clear (AC) */}
-          <button
-            className="bg-red-600 border border-slate-400 text-white"
-            id="clear"
-            onClick={clearData}
-          >
-            AC
-          </button>
-
-          {/* Delete (DEL) */}
-          <button
-            className="bg-rose-200 border border-slate-400"
-            id="delete"
-            onClick={handleDelete}
-          >
-            DEL
-          </button>
-
-          {/* Divide (/) */}
-          <button
-            className="bg-white border border-slate-400"
-            id="divide"
-            value={"/"}
-            onClick={handleOperator}
-          >
-            /
-          </button>
-
-          {/* Multiply (x) */}
-          <button
-            className="bg-white border border-slate-400"
-            id="multiply"
-            onClick={handleOperator}
-            value={"*"}
-          >
-            X
-          </button>
-
-          {/* 7 8 9 */}
-          <button
-            className="bg-white border border-slate-400"
-            id="seven"
-            value={7}
-            onClick={handleNumber}
-          >
-            7
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="eight"
-            value={8}
-            onClick={handleNumber}
-          >
-            8
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="nine"
-            value={9}
-            onClick={handleNumber}
-          >
-            9
-          </button>
-
-          {/* Subtract */}
-          <button
-            className="bg-white border border-slate-400"
-            id="subtract"
-            onClick={handleOperator}
-            value={"-"}
-          >
-            -
-          </button>
-
-          {/* 4 5 6 */}
-          <button
-            className="bg-white border border-slate-400"
-            id="four"
-            value={4}
-            onClick={handleNumber}
-          >
-            4
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="five"
-            value={5}
-            onClick={handleNumber}
-          >
-            5
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="six"
-            value={6}
-            onClick={handleNumber}
-          >
-            6
-          </button>
-
-          {/* + */}
-          <button
-            className="bg-white border border-slate-400"
-            id="add"
-            onClick={handleOperator}
-            value={"+"}
-          >
-            +
-          </button>
-
-          {/* 1 2 3 */}
-          <button
-            className="bg-white border border-slate-400"
-            id="one"
-            value={1}
-            onClick={handleNumber}
-          >
-            1
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="two"
-            value={2}
-            onClick={handleNumber}
-          >
-            2
-          </button>
-          <button
-            className="bg-white border border-slate-400"
-            id="three"
-            value={3}
-            onClick={handleNumber}
-          >
-            3
-          </button>
-
-          {/* Equals */}
-          <button
-            className="bg-orange-300 border border-slate-400 row-span-2"
-            id="equals"
-            onClick={handleSum}
-          >
-            =
-          </button>
-
-          {/* 0 */}
-          <button
-            className="bg-white border border-slate-400 col-span-2"
-            id="zero"
-            value="0"
-            onClick={handleNumber}
-          >
-            0
-          </button>
-
-          {/* Decimals */}
-          <button
-            className="bg-white border border-slate-400"
-            id="decimal"
-            onClick={handleDecimal}
-            value={"."}
-          >
-            .
-          </button>
+            <button id="reset" onClick={handleResetTime}>
+              <img
+                draggable="false"
+                src="src/assets/reset.svg"
+                alt="Reset"
+                className="xl:w-10"
+              />
+            </button>
+          </div>
         </div>
       </div>
+      <audio
+        id="beep"
+        preload="auto"
+        src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+      />
     </div>
   );
 }
