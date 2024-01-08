@@ -109,7 +109,7 @@ function App() {
               >
                 <img
                   draggable="false"
-                  src="src/assets/arrow_down.svg"
+                  src="assets/arrow_down.svg"
                   className="xl:w-10"
                 ></img>
               </button>
@@ -121,7 +121,7 @@ function App() {
               >
                 <img
                   draggable="false"
-                  src="src/assets/arrow_up.svg"
+                  src="assets/arrow_up.svg"
                   className="xl:w-10"
                 ></img>
               </button>
@@ -137,7 +137,7 @@ function App() {
               >
                 <img
                   draggable="false"
-                  src="src/assets/arrow_down.svg"
+                  src="assets/arrow_down.svg"
                   className="xl:w-10"
                 ></img>
               </button>
@@ -151,7 +151,7 @@ function App() {
               >
                 <img
                   draggable="false"
-                  src="src/assets/arrow_up.svg"
+                  src="assets/arrow_up.svg"
                   className="xl:w-10"
                 ></img>
               </button>
@@ -167,7 +167,7 @@ function App() {
             <button id="start_stop" onClick={handlePlay}>
               <img
                 draggable="false"
-                src="src/assets/playPause.svg"
+                src="assets/playPause.svg"
                 alt="Play-Pause"
                 className="w-16 xl:w-20"
               />
@@ -176,7 +176,7 @@ function App() {
             <button id="reset" onClick={handleResetTime}>
               <img
                 draggable="false"
-                src="src/assets/reset.svg"
+                src="assets/reset.svg"
                 alt="Reset"
                 className="xl:w-10"
               />
